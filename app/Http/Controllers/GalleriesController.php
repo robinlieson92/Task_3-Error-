@@ -42,11 +42,38 @@ class GalleriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(GalleryRequest $request)
+    public function store(Request $request)
     {
-        Gallery::create($request->all());
-        Session::flash("notice", "Gallery success created");
-        return redirect()->route("galleries.index");
+       $validate=Validator::make(Input::all(), Gallery::valid());
+        if($validate->fails()){
+            return Redirect::to('galleries/create')
+                ->withErrors($validate)
+                ->withInput();
+        }else{
+            $gallery = new Gallery;
+            $gallery->title = Input::get('title');
+
+            if (Input::hasFile('url'))
+                {
+                    $image = Input::file('url');
+                    $imagename = $image->getClientOriginalName();
+                    //$file->move('public/uploads', $file->getClientOriginalName());
+                    $gallery->url ="ori_".$imagename;
+                    $gallery->thumbnail ="thumb_".$imagename;
+                    $gallery->showimage ="show_".$imagename;
+                    $gallery->save();
+                    $directory = public_path()."/upload_gambar/".$gallery->id;
+                    if(!File::exists($directory)){
+                        File::makeDirectory($directory,$mode=0777,true,true);
+                    }
+                    Image::make($image->getRealPath())->save($directory."/ori_".$imagename);
+                    Image::make($image->getRealPath())->resize('200','100')->save($directory."/thumb_".$imagename);
+                    Image::make($image->getRealPath())->resize('600','300')->save($directory."/show_".$imagename);
+                    Session::flash('notice', 'Gallery success add');
+                    return Redirect::to('galleries.show');
+                }
+
+        }
     }
 
     /**
@@ -58,7 +85,8 @@ class GalleriesController extends Controller
     public function show($id)
     {
         $galleries = Gallery::find($id);
-        return view('galleries.show')->with('galleries', $galleries);
+        return view('galleries.show')
+        ->with('galleries', $galleries);
     }
 
     /**
@@ -70,7 +98,8 @@ class GalleriesController extends Controller
     public function edit($id)
     {
         $galleries = Gallery::find($id);
-        return view('galleries.edit')->with('galleries', $galleries);
+        return view('galleries.edit')
+        ->with('galleries', $galleries);
     }
 
     /**

@@ -19,7 +19,7 @@
           <div id="main-content" class="col-xs-12 col-sm-7 main pull-right">
             <div class="panel-body">
               @if (Session::has('error'))
-                <div class="session-flash alert-danger">
+                <div class="session-flash alert alert-danger">
                     {{Session::get('error')}}
                 </div>
               @endif

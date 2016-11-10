@@ -12,8 +12,10 @@
 */
 
 Route::resource('articles', 'ArticlesController');
+Route::resource('galleries', 'GalleriesController');
 
 Route::get('articles.index', 'ArticlesController@index');
+Route::get('galleries.index', 'GalleriesController@index');
 
 Route::get('/', ['as' => 'root', 'uses' => function () {
     return view('welcome');

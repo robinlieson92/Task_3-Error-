@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Article;
+use App\Gallery;
 
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\GalleryRequest;
 
 use Session;
 
-class ArticlesController extends Controller
+class GalleriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,10 +21,9 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
-        
-        return view('articles.index')
-        ->with('articles', $articles);
+        $galleries=Gallery::all();
+        return view('galleries.index')
+        ->with('galleries', $galleries);
     }
 
     /**
@@ -34,7 +33,7 @@ class ArticlesController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        return view('galleries.create');
     }
 
     /**
@@ -43,11 +42,11 @@ class ArticlesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GalleryRequest $request)
     {
-        Article::create($request->all());
-        Session::flash("notice", "Article success created");
-        return redirect()->route("articles.index");
+        Gallery::create($request->all());
+        Session::flash("notice", "Gallery success created");
+        return redirect()->route("galleries.index");
     }
 
     /**
@@ -58,8 +57,8 @@ class ArticlesController extends Controller
      */
     public function show($id)
     {
-        $article = Article::find($id);
-        return view('articles.show')->with('article', $article);
+        $galleries = Gallery::find($id);
+        return view('galleries.show')->with('galleries', $galleries);
     }
 
     /**
@@ -70,8 +69,8 @@ class ArticlesController extends Controller
      */
     public function edit($id)
     {
-        $article = Article::find($id);
-        return view('articles.edit')->with('article', $article);
+        $galleries = Gallery::find($id);
+        return view('galleries.edit')->with('galleries', $galleries);
     }
 
     /**
@@ -81,11 +80,11 @@ class ArticlesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ArticleRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        Article::find($id)->update($request->all());
-        Session::flash("notice", "Article success updated");
-        return redirect()->route("articles.show", $id);
+        Gallery::find($id)->update($request->all());
+        Session::flash("notice", "Gallery success updated");
+        return redirect()->route("galleries.show", $id);
     }
 
     /**
@@ -96,8 +95,8 @@ class ArticlesController extends Controller
      */
     public function destroy($id)
     {
-        Article::destroy($id);
-        Session::flash("notice", "Article success deleted");
-        return redirect()->route("articles.index");
+        Gallery::destroy($id);
+        Session::flash("notice", "Gallery success deleted");
+        return redirect()->route("galleries.index");
     }
 }
